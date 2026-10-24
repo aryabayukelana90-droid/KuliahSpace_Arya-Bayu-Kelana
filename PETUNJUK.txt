@@ -1,0 +1,10 @@
+KuliahSpace — Arya Bayu Kelana
+NIM: 240511055 | Kelas: TI24D
+
+CARA MEMPERBARUI GITHUB PAGES
+1. Ekstrak ZIP ini.
+2. Unggah index.html dan foto.jpeg ke root repositori GitHub, mengganti file lama.
+3. Klik Commit changes dan tunggu GitHub Pages selesai.
+
+FITUR LAMPIRAN
+Form materi dan tugas sekarang menerima file dari komputer (PDF, Word, PowerPoint, Excel, TXT, JPG, PNG). Batas ukuran 1 MB per file. File disimpan dalam localStorage browser, tidak tersinkron otomatis ke perangkat lain. Data dapat memenuhi kuota browser jika banyak file ditambahkan.
