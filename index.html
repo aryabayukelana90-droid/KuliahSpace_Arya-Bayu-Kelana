@@ -27,7 +27,7 @@ main{min-width:0}.topbar{height:78px;background:white;border-bottom:1px solid va
 <div class="sidecard"><strong>Belajar lebih terarah.</strong>Kelola banyak mata kuliah dan pisahkan materi serta tugas setiap mata kuliah dalam satu ruang.</div>
 </aside>
 <main>
-<header class="topbar"><div class="crumb" id="topTitle">Dashboard<small>Workspace akademik pribadi</small></div><div class="profile"><span id="viewModeLabel">Tampilan publik</span><button class="btn outline" id="adminAccessBtn" type="button">Login Admin</button><button class="btn outline hidden" id="adminLogoutBtn" type="button">Keluar</button><img class="profile-photo" src="foto.jpeg" alt="Foto Arya Bayu Kelana"></div></header>
+<header class="topbar"><div class="crumb" id="topTitle">Dashboard<small>Workspace akademik pribadi</small></div><div class="profile"><span id="viewModeLabel">Tampilan publik</span><button class="btn outline" id="adminAccessBtn" type="button" onclick="window.location.href=window.location.pathname+'?admin=1'">Login Admin</button><button class="btn outline hidden" id="adminLogoutBtn" type="button">Keluar</button><img class="profile-photo" src="foto.jpeg" alt="Foto Arya Bayu Kelana"></div></header>
 <div class="wrap">
 <section class="page active" id="dashboard"><div class="public-note">Website ini dapat dilihat siapa saja. Hanya admin yang masuk melalui halaman khusus yang dapat menambah, mengubah, atau menghapus konten.</div>
 <div class="eyebrow">Ruang akademik digital</div><h1>Selamat datang di KuliahSpace</h1><p class="intro">Satu tempat untuk mengelola berbagai mata kuliah, materi pembelajaran, dan tugas perkuliahan.</p>
@@ -94,10 +94,22 @@ main{min-width:0}.topbar{height:78px;background:white;border-bottom:1px solid va
 <div class="footer">KULIAHSPACE · Arya Bayu Kelana · 240511055 · TI24D</div>
 </div></main></div>
 <div id="adminLoginModal" class="login-overlay hidden"><div class="login-card"><div class="logo">K</div><h2>Login Admin KuliahSpace</h2><p class="muted">Halaman publik tetap bisa dilihat tanpa login. Masuk hanya untuk mengelola isi website.</p><form id="adminLoginForm" class="login-form"><label>Email admin<input id="adminEmail" type="email" required autocomplete="username" placeholder="Email akun Supabase"></label><label>Password<input id="adminPassword" type="password" required autocomplete="current-password" placeholder="Password akun Supabase"></label><button class="btn" type="submit">Masuk sebagai admin</button><div id="loginError" class="login-error"></div></form><button class="btn outline" type="button" id="cancelLogin">Kembali ke tampilan publik</button></div></div>
+<script>
+// Pastikan formulir login langsung terlihat pada URL admin, tanpa menunggu koneksi Supabase.
+if (new URLSearchParams(window.location.search).get("admin") === "1") {
+  const loginModal = document.getElementById("adminLoginModal");
+  if (loginModal) loginModal.classList.remove("hidden");
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL="https://uuayzxxvccnygsppidyh.supabase.co";
 const SUPABASE_KEY="sb_publishable_X-YhKlbGi6bCUhoNTlEJ2g_wsS74c6c";
+if (!window.supabase || typeof window.supabase.createClient !== "function") {
+  const err = document.getElementById("loginError");
+  if (err) err.textContent = "Komponen login gagal dimuat. Periksa koneksi internet atau coba muat ulang halaman.";
+  throw new Error("Supabase JS library gagal dimuat dari CDN");
+}
 const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const ADMIN_MODE=new URLSearchParams(location.search).get("admin")==="1";
 let isAdmin=false, currentUser=null, dataLoaded=false, saving=false;
