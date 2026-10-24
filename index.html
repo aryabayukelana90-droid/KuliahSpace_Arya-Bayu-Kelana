@@ -127,7 +127,26 @@ function setAdminUI(value){isAdmin=!!value;document.body.classList.toggle('is-ad
 document.getElementById('adminAccessBtn').addEventListener('click',()=>{location.href=location.pathname+'?admin=1'});
 document.getElementById('adminLogoutBtn').addEventListener('click',async()=>{await supabase.auth.signOut();location.href=location.pathname});
 document.getElementById('cancelLogin').addEventListener('click',()=>{location.href=location.pathname});
-document.getElementById('adminLoginForm').addEventListener('submit',async e=>{e.preventDefault();const b=e.target.querySelector('button[type=submit]');b.disabled=true;document.getElementById('loginError').textContent='';const {data,error}=await supabase.auth.signInWithPassword({email:document.getElementById('adminEmail').value.trim(),password:document.getElementById('adminPassword').value});b.disabled=false;if(error){document.getElementById('loginError').textContent='Login gagal: '+error.message;return}currentUser=data.user;const ok=await fetchPublicData();if(!ok){if(!currentUser){document.getElementById('adminLoginModal').classList.remove('hidden');return}db=loadLocalData()}setAdminUI(true);render()});
+document.getElementById('adminLoginForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const b=e.target.querySelector('button[type=submit]');
+ const errBox=document.getElementById('loginError');
+ b.disabled=true; b.textContent='Memeriksa akun...'; errBox.textContent='Menghubungkan ke Supabase...';
+ try {
+  const {data,error}=await supabase.auth.signInWithPassword({email:document.getElementById('adminEmail').value.trim(),password:document.getElementById('adminPassword').value});
+  if(error) throw error;
+  if(!data?.user) throw new Error('Login belum menghasilkan sesi. Periksa email dan password akun Supabase.');
+  currentUser=data.user;
+  const {data:row,error:readError}=await supabase.from(DATA_TABLE).select('owner_id,data').eq('id',1).maybeSingle();
+  if(readError) throw new Error('Akun berhasil masuk, tetapi data website gagal dibaca: '+readError.message+'. Pastikan tabel kuliahspace_public_data dan kebijakan SQL sudah benar.');
+  if(!row) throw new Error('Akun berhasil masuk, tetapi baris data website (id=1) belum ada. Jalankan SQL setup dan pastikan UUID admin benar.');
+  if(row.owner_id!==data.user.id) throw new Error('Email dan password benar, tetapi akun ini bukan pemilik/admin yang terdaftar. Periksa UUID di Authentication > Users dan kolom owner_id.');
+  db=row.data||emptyData(); dataLoaded=true; setAdminUI(true); errBox.textContent=''; render();
+ } catch(err) {
+  console.error('KuliahSpace admin login:',err);
+  errBox.textContent='Gagal masuk: '+(err?.message||'Terjadi kesalahan. Buka Console browser untuk detail.');
+ } finally { b.disabled=false; b.textContent='Masuk sebagai admin'; }
+});
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));const titles={dashboard:'Dashboard',matakuliah:'Mata Kuliah',ruangMK:'Ruang Mata Kuliah',tentang:'Tentang Website'};document.getElementById('topTitle').innerHTML=esc(titles[id]||'KuliahSpace')+'<small>Workspace akademik pribadi</small>';window.scrollTo({top:0,behavior:'smooth'});if(id==='ruangMK')renderRoom()}
