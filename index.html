@@ -125,7 +125,7 @@ function setCloudStatus(message,online=false){const el=document.getElementById('
 async function publishPublicData(snapshot){
  if(!cloudUser)return;
  const {error}=await supabaseClient.from('kuliahspace_public_data').upsert(
-  {id:'main',owner_id:cloudUser.id,data:snapshot,updated_at:new Date().toISOString()},
+  {id:1,owner_id:cloudUser.id,data:snapshot,updated_at:new Date().toISOString()},
   {onConflict:'id'}
  );
  if(error){console.error('Public publish error:',error);setCloudStatus('Data tersimpan pribadi, tetapi publikasi gagal: '+error.message,false);return false}
@@ -135,7 +135,7 @@ async function loadPublicView(){
  document.getElementById('authOverlay').style.display='none';
  document.getElementById('logoutBtn').style.display='none';
  setCloudStatus('Memuat tampilan publik hanya-baca…',false);
- const {data,error}=await supabaseClient.from('kuliahspace_public_data').select('data').eq('id','main').maybeSingle();
+ const {data,error}=await supabaseClient.from('kuliahspace_public_data').select('data').eq('id',1).maybeSingle();
  if(error){
   db=emptyData();render();
   setCloudStatus('Data publik belum tersedia atau izin baca belum diatur.',false);
