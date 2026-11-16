@@ -1,13 +1,11 @@
 KuliahSpace — Arya Bayu Kelana
-NIM: 240511055
-Kelas: TI24D
 
-Cara unggah ke GitHub:
-1. Ekstrak ZIP ini.
-2. Di repositori GitHub KuliahSpace_Arya-Bayu-Kelana, klik Add file > Upload files.
-3. Unggah index.html dan foto.jpeg dari folder KuliahSpace.
-4. Pastikan keduanya berada di root repositori.
-5. Commit changes. GitHub Pages akan memperbarui situs.
+Fitur yang ditambahkan:
+- Folder pertemuan terpisah untuk materi dan tugas.
+- Pindahkan item materi atau tugas ke folder lain atau ke Tanpa folder.
+- Hapus folder; item di dalamnya dipindahkan ke Tanpa folder dan tidak terhapus.
+- Pilihan tema cerah/gelap yang diingat oleh browser.
 
-Fitur: tambah banyak mata kuliah, buka mata kuliah, kelola materi dan tugas per mata kuliah, cari, ubah status tugas, ekspor/impor backup JSON.
-Catatan: versi statis menyimpan data di browser lokal, bukan database online. Data yang ditambahkan di satu perangkat tidak otomatis tampil di perangkat dosen.
+Data lama tetap dapat dibuka; item lama tampil di Tanpa folder. Data website tetap disimpan di browser dan/atau akun cloud sesuai pengaturan awal situs. Lampiran file memiliki batas 1 MB.
+
+Untuk memperbarui GitHub Pages, unggah index.html dan foto.jpeg ke root repositori, lalu commit perubahan.
